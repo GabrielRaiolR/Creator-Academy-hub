@@ -15,11 +15,16 @@ export function isAdmin(user: Pick<CurrentUser, "role" | "active"> | null | unde
   return Boolean(user?.active && user.role === "ADMIN");
 }
 
-/** Students only ever see published lessons; admins can preview drafts. */
+/**
+ * Admins can preview every lesson. A student sees a lesson only when it is published
+ * and an admin has released it to that student.
+ */
 export function canViewLesson(
   user: Pick<CurrentUser, "role" | "active"> | null | undefined,
   lesson: { status: LessonStatus },
+  granted = false,
 ): boolean {
   if (!user?.active) return false;
-  return lesson.status === "PUBLISHED" || user.role === "ADMIN";
+  if (user.role === "ADMIN") return true;
+  return lesson.status === "PUBLISHED" && granted;
 }

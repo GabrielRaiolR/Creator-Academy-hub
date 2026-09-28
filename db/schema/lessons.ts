@@ -5,6 +5,7 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uniqueIndex,
@@ -76,9 +77,28 @@ export const lessonResource = pgTable(
   (table) => [index("lesson_resource_lesson_id_idx").on(table.lessonId)],
 );
 
+/** Which students may see a published lesson. No row means the student cannot see it. */
+export const lessonGrant = pgTable(
+  "lesson_grant",
+  {
+    lessonId: uuid("lesson_id")
+      .notNull()
+      .references(() => lesson.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.lessonId, table.userId] }),
+    index("lesson_grant_user_id_idx").on(table.userId),
+  ],
+);
+
 export const lessonRelations = relations(lesson, ({ many }) => ({
   translations: many(lessonTranslation),
   resources: many(lessonResource),
+  grants: many(lessonGrant),
 }));
 
 export const lessonTranslationRelations = relations(lessonTranslation, ({ one }) => ({
@@ -87,4 +107,9 @@ export const lessonTranslationRelations = relations(lessonTranslation, ({ one })
 
 export const lessonResourceRelations = relations(lessonResource, ({ one }) => ({
   lesson: one(lesson, { fields: [lessonResource.lessonId], references: [lesson.id] }),
+}));
+
+export const lessonGrantRelations = relations(lessonGrant, ({ one }) => ({
+  lesson: one(lesson, { fields: [lessonGrant.lessonId], references: [lesson.id] }),
+  user: one(user, { fields: [lessonGrant.userId], references: [user.id] }),
 }));

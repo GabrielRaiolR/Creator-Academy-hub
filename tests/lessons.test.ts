@@ -36,7 +36,16 @@ describe("getPublishIssues", () => {
     ).toEqual([]);
   });
 
-  it("reports missing translations, titles, content and bad slug", () => {
+  it("passes with a single complete language", () => {
+    expect(
+      getPublishIssues({
+        slug: "aula",
+        translations: { "bn-BD": { title: "পাঠ", content: body("লেখা") } },
+      }),
+    ).toEqual([]);
+  });
+
+  it("reports a started-but-empty language, a bad slug, and no complete language", () => {
     expect(
       getPublishIssues({
         slug: "Bad Slug",
@@ -45,11 +54,7 @@ describe("getPublishIssues", () => {
           "bn-BD": { title: "", content: body("") },
         },
       }),
-    ).toEqual([
-      { code: "INVALID_SLUG" },
-      { code: "MISSING_TITLE", locale: "pt-BR" },
-      { code: "MISSING_TRANSLATION", locale: "bn-BD" },
-    ]);
+    ).toEqual([{ code: "INVALID_SLUG" }, { code: "MISSING_TITLE", locale: "pt-BR" }, { code: "NO_LANGUAGE" }]);
   });
 
   it("reports missing content only", () => {

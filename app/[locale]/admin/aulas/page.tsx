@@ -8,9 +8,10 @@ import { PageHeader } from "@/components/ui/page-header";
 import { localePath, localeShortNames, locales } from "@/lib/i18n/config";
 import { getLocaleContext } from "@/lib/i18n/server";
 import { requireAdmin } from "@/lib/permissions";
-import { listLessonsForAdmin } from "@/lib/queries/lessons";
+import { listLessonsForAdmin, listStudentsForRelease } from "@/lib/queries/lessons";
 import { cn, formatDate } from "@/lib/utils";
 import { LessonRowActions } from "./lesson-row-actions";
+import { ReleaseLessonButton } from "./release-lesson-button";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/admin/aulas">): Promise<Metadata> {
   const { t } = await getLocaleContext(params);
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/admin/au
 export default async function AdminLessonsPage({ params }: PageProps<"/[locale]/admin/aulas">) {
   const { segment, locale, t } = await getLocaleContext(params);
   await requireAdmin(segment);
-  const lessons = await listLessonsForAdmin();
+  const [lessons, students] = await Promise.all([listLessonsForAdmin(), listStudentsForRelease()]);
   const l = t.admin.lessons;
 
   return (
@@ -113,12 +114,15 @@ export default async function AdminLessonsPage({ params }: PageProps<"/[locale]/
                     </div>
                   </div>
                 </div>
-                <LessonRowActions
+                <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+                  <ReleaseLessonButton lessonId={lesson.id} students={students} grants={lesson.grants} />
+                  <LessonRowActions
                   id={lesson.id}
                   slug={lesson.slug}
                   isFirst={index === 0}
                   isLast={index === lessons.length - 1}
                 />
+                </div>
               </li>
             );
           })}

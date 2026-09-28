@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { lesson, lessonResource } from "@/db/schema";
+import { studentHasGrant } from "@/lib/queries/lessons";
 import { getCurrentUser } from "@/lib/auth/session";
 import { attachmentDisposition } from "@/lib/blob";
 import { PDF_MIME_TYPE, isBlobConfigured } from "@/lib/config";
@@ -39,13 +40,16 @@ export async function GET(request: Request, context: RouteContext<"/api/resource
       blobPath: lessonResource.blobPath,
       size: lessonResource.size,
       status: lesson.status,
+      lessonId: lesson.id,
     })
     .from(lessonResource)
     .innerJoin(lesson, eq(lesson.id, lessonResource.lessonId))
     .where(eq(lessonResource.id, parsedId.data))
     .limit(1);
 
-  if (!resource || !canViewLesson(user, resource)) return unavailable(404);
+  if (!resource) return unavailable(404);
+  const granted = user.role === "ADMIN" || (await studentHasGrant(user.id, resource.lessonId));
+  if (!canViewLesson(user, resource, granted)) return unavailable(404);
   if (!isBlobConfigured()) return unavailable(503);
 
   const blob = await get(resource.blobPath, { access: "private" }).catch((error: unknown) => {

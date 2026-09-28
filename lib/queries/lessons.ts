@@ -1,7 +1,7 @@
 import "server-only";
-import { asc, count, desc, eq, max } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, max } from "drizzle-orm";
 import { db } from "@/db";
-import { lesson, type LessonStatus } from "@/db/schema";
+import { lesson, lessonGrant, user, type LessonStatus } from "@/db/schema";
 import { isRichTextEmpty } from "@/lib/content/rich-text";
 import { locales, type Locale } from "@/lib/i18n/config";
 import { pickTranslation, resourcesForLocale } from "@/lib/lessons/translations";
@@ -21,10 +21,32 @@ export type LessonCardData = {
   publishedAt: Date | null;
 };
 
-/** Published lessons in display order, localized; `number` is the 1-based position ("Aula 03"). */
-export async function listPublishedLessons(locale: Locale): Promise<LessonCardData[]> {
+/** Lesson ids released to this student. Admins are not filtered. */
+export async function grantedLessonIds(viewer: CurrentUser): Promise<string[] | null> {
+  if (viewer.role === "ADMIN") return null;
+  const rows = await db
+    .select({ lessonId: lessonGrant.lessonId })
+    .from(lessonGrant)
+    .where(eq(lessonGrant.userId, viewer.id));
+  return rows.map((row) => row.lessonId);
+}
+
+export async function studentHasGrant(userId: string, lessonId: string): Promise<boolean> {
+  const [row] = await db
+    .select({ lessonId: lessonGrant.lessonId })
+    .from(lessonGrant)
+    .where(and(eq(lessonGrant.userId, userId), eq(lessonGrant.lessonId, lessonId)))
+    .limit(1);
+  return Boolean(row);
+}
+
+/** Published lessons this person may see. Students only receive lessons released to them. */
+export async function listPublishedLessons(locale: Locale, viewer: CurrentUser): Promise<LessonCardData[]> {
+  const granted = await grantedLessonIds(viewer);
+  if (granted && granted.length === 0) return [];
+
   const rows = await db.query.lesson.findMany({
-    where: eq(lesson.status, "PUBLISHED"),
+    where: granted ? and(eq(lesson.status, "PUBLISHED"), inArray(lesson.id, granted)) : eq(lesson.status, "PUBLISHED"),
     orderBy: publishedOrder,
     columns: { id: true, slug: true, youtubeUrl: true, publishedAt: true },
     with: {
@@ -59,14 +81,20 @@ export async function getLessonForReader(slug: string, locale: Locale, viewer: C
       resources: { orderBy: (resource, { asc: ascending }) => [ascending(resource.createdAt)] },
     },
   });
-  if (!row || !canViewLesson(viewer, row)) return null;
+  if (!row) return null;
+  const granted = viewer.role === "ADMIN" || (await studentHasGrant(viewer.id, row.id));
+  if (!canViewLesson(viewer, row, granted)) return null;
 
   const { translation, isFallback } = pickTranslation(row.translations, locale);
-  const published = await db
-    .select({ id: lesson.id, slug: lesson.slug })
-    .from(lesson)
-    .where(eq(lesson.status, "PUBLISHED"))
-    .orderBy(...publishedOrder);
+  const allowed = await grantedLessonIds(viewer);
+  const published =
+    allowed && allowed.length === 0
+      ? []
+      : await db
+          .select({ id: lesson.id, slug: lesson.slug })
+          .from(lesson)
+          .where(allowed ? and(eq(lesson.status, "PUBLISHED"), inArray(lesson.id, allowed)) : eq(lesson.status, "PUBLISHED"))
+          .orderBy(...publishedOrder);
 
   const position = published.findIndex((item) => item.id === row.id);
   const neighbour = (offset: number) => (position === -1 ? null : published[position + offset] ?? null);
@@ -98,6 +126,7 @@ export async function listLessonsForAdmin() {
     with: {
       translations: { columns: { locale: true, title: true, content: true } },
       resources: { columns: { id: true } },
+      grants: { with: { user: { columns: { id: true, name: true, email: true } } } },
     },
   });
 
@@ -109,6 +138,9 @@ export async function listLessonsForAdmin() {
     updatedAt: row.updatedAt,
     hasVideo: Boolean(row.youtubeUrl),
     resourceCount: row.resources.length,
+    grants: row.grants
+      .map((grant) => grant.user)
+      .filter((person): person is { id: string; name: string; email: string } => person !== null),
     titles: Object.fromEntries(row.translations.map((item) => [item.locale, item.title])) as Partial<Record<Locale, string>>,
     completeLocales: locales.filter((locale) => {
       const item = row.translations.find((translation) => translation.locale === locale);
@@ -126,6 +158,19 @@ export async function getLessonForEditor(id: string) {
     },
   });
   return row ?? null;
+}
+
+export async function listStudentsForRelease() {
+  return db
+    .select({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      preferredLocale: user.preferredLocale,
+    })
+    .from(user)
+    .where(and(eq(user.role, "STUDENT"), eq(user.active, true)))
+    .orderBy(asc(user.name));
 }
 
 export async function getNextLessonOrder(): Promise<number> {

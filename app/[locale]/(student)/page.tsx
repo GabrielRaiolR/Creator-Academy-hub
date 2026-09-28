@@ -31,7 +31,7 @@ function Shortcut({ href, icon, label }: { href: string; icon: ReactNode; label:
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { segment, locale, t } = await getLocaleContext(params);
   const user = await requireUser(segment);
-  const lessons = await listPublishedLessons(locale);
+  const lessons = await listPublishedLessons(locale, user);
 
   const recent = lessons
     .filter((lesson) => lesson.publishedAt)

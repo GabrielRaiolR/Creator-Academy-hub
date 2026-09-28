@@ -16,9 +16,10 @@ describe("isAdmin", () => {
 });
 
 describe("canViewLesson", () => {
-  it("lets students see only published lessons", () => {
-    expect(canViewLesson(student, published)).toBe(true);
-    expect(canViewLesson(student, draft)).toBe(false);
+  it("lets students see a published lesson only after it is released to them", () => {
+    expect(canViewLesson(student, published, true)).toBe(true);
+    expect(canViewLesson(student, published, false)).toBe(false);
+    expect(canViewLesson(student, draft, true)).toBe(false);
   });
 
   it("lets admins preview drafts", () => {

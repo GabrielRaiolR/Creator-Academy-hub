@@ -174,7 +174,7 @@
     },
     "lessons": {
       "title": "Aulas",
-      "subtitle": "Cada aula tem uma versão em português e outra em বাংলা.",
+      "subtitle": "Cada aula pode ter português, বাংলা ou os dois. Libere a aula só para os alunos que devem vê-la.",
       "new": "Nova aula",
       "order": "Ordem",
       "lesson": "Aula",
@@ -189,7 +189,19 @@
       "deleteTitle": "Excluir esta aula?",
       "deleteText": "A aula, as duas traduções e todos os materiais serão excluídos permanentemente. Esta ação não pode ser desfeita.",
       "deleted": "Aula excluída.",
-      "untitled": "Sem título"
+      "untitled": "Sem título",
+      "release": "Liberar",
+      "releaseTitle": "Liberar aula",
+      "releaseText": "Depois de publicada, só os alunos escolhidos aqui conseguem ver a aula e baixar o PDF.",
+      "releaseStudent": "Aluno",
+      "releaseNoStudents": "Nenhum aluno ativo. Crie a conta em Alunos antes de liberar.",
+      "releaseAllGranted": "Todos os alunos ativos já têm acesso",
+      "releaseCurrent": "Com acesso",
+      "releaseEmpty": "Nenhum aluno com acesso.",
+      "releaseRevoke": "Remover",
+      "released": "Aula liberada.",
+      "revoked": "Acesso removido.",
+      "releaseInvalid": "Escolha um aluno ativo."
     },
     "lessonStatus": {
       "DRAFT": "Rascunho",
@@ -198,7 +210,7 @@
     "editor": {
       "createTitle": "Nova aula",
       "editTitle": "Editar aula",
-      "subtitle": "Uma aula, duas traduções. Preencha o português e o বাংলা antes de publicar.",
+      "subtitle": "Preencha pelo menos um idioma por completo antes de publicar. O outro pode ficar vazio.",
       "generalTitle": "Informações gerais",
       "generalSubtitle": "Dados compartilhados entre os dois idiomas.",
       "slug": "Slug (endereço)",
@@ -235,6 +247,7 @@
       "unsavedChanges": "Alterações não salvas",
       "issues": {
         "INVALID_SLUG": "O slug é inválido.",
+        "NO_LANGUAGE": "Preencha o título e o conteúdo em pelo menos um idioma.",
         "MISSING_TRANSLATION": "Falta a versão em {language}.",
         "MISSING_TITLE": "O título em {language} está vazio.",
         "MISSING_CONTENT": "O conteúdo em {language} está vazio."

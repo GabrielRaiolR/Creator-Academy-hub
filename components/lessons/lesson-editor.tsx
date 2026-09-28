@@ -86,9 +86,9 @@ export function LessonEditor({ lessonId, status, initial, resources, blobConfigu
     });
 
   const describeIssue = (issue: PublishIssue) =>
-    issue.code === "INVALID_SLUG"
-      ? e.issues.INVALID_SLUG
-      : format(e.issues[issue.code], { language: t.languages[issue.locale] });
+    "locale" in issue
+      ? format(e.issues[issue.code], { language: t.languages[issue.locale] })
+      : e.issues[issue.code];
 
   const submit = (intent: LessonIntent) => {
     const payload = intent === "save" && status !== "PUBLISHED" ? withDraftSlug(values) : values;

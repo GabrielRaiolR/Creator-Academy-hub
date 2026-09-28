@@ -14,8 +14,8 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/aulas">)
 
 export default async function LessonsPage({ params }: PageProps<"/[locale]/aulas">) {
   const { segment, locale, t } = await getLocaleContext(params);
-  await requireUser(segment);
-  const lessons = await listPublishedLessons(locale);
+  const user = await requireUser(segment);
+  const lessons = await listPublishedLessons(locale, user);
 
   return (
     <>
