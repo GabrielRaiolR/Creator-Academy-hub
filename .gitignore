@@ -43,6 +43,11 @@ yarn-error.log*
 # local design reference; not part of the app (also listed in .vercelignore)
 /System Design UXUI/
 
+# lesson source files stay off GitHub; the live copy is in the database and private Blob
+/Creator_Academy_Class_01_Bangla_Final.md
+/Creator_Academy_Class_01_Bangla_Final.pdf
+/scripts/import-class-01.ts
+
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example
