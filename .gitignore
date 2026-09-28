@@ -46,6 +46,7 @@ yarn-error.log*
 # lesson source files stay off GitHub; the live copy is in the database and private Blob
 /Creator_Academy_Class_01_Bangla_Final.md
 /Creator_Academy_Class_01_Bangla_Final.pdf
+/Creator_Academy_Aula_01_Portugues_Final.pdf
 /scripts/import-class-01.ts
 
 # env files (can opt-in for committing if needed)
