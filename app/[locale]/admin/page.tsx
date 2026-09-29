@@ -61,7 +61,7 @@ export default async function AdminDashboardPage({ params }: PageProps<"/[locale
         }
       />
 
-      <dl className="mb-12 grid grid-cols-1 gap-px overflow-hidden rounded-[2rem] bg-zinc-200 shadow-ring sm:grid-cols-3">
+      <dl className="mb-8 grid grid-cols-1 gap-px overflow-hidden rounded-[2rem] bg-zinc-200 shadow-ring sm:grid-cols-3">
         {stats.map((stat) => (
           <div key={stat.label} className="bg-white">
             <Link href={localePath(segment, stat.href)} className="flex flex-col gap-3 p-6 hover:bg-zinc-50 sm:p-8">

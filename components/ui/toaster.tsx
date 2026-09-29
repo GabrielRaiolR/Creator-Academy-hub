@@ -7,6 +7,7 @@ export function Toaster() {
   return (
     <Sonner
       position="top-center"
+      className="toaster-center"
       closeButton
       toastOptions={{
         classNames: {

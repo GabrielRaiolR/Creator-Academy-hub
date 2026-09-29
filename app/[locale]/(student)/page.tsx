@@ -48,7 +48,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         description={t.home.subtitle}
       />
 
-      <nav aria-label={t.nav.primary} className="mb-12 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <nav aria-label={t.nav.primary} className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <Shortcut
           href={localePath(segment, "/aulas")}
           icon={<BookOpen aria-hidden className="size-4" strokeWidth={1.5} />}
@@ -75,7 +75,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           description={t.home.emptyText}
         />
       ) : (
-        <div className="flex flex-col gap-14">
+        <div className="flex flex-col gap-10">
           <section aria-labelledby="available-title">
             <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
               <h2 id="available-title" className="text-2xl font-medium tracking-tight text-zinc-900">

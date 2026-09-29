@@ -40,7 +40,7 @@ export function Eyebrow({ children, className }: { children: ReactNode; classNam
   return (
     <span
       className={cn(
-        "hairline inline-flex w-max items-center rounded-full bg-white/60 px-4 py-1.5 text-xs font-medium tracking-wide text-zinc-600 shadow-sm backdrop-blur-sm",
+        "hairline inline-flex w-max items-center rounded-full bg-zinc-50 px-4 py-1.5 text-xs font-medium tracking-wide text-zinc-600 shadow-sm",
         className,
       )}
     >

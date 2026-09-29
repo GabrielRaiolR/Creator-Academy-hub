@@ -20,7 +20,7 @@ function LogoutButton({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-60"
+      className="flex w-full items-center justify-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-60 md:justify-start md:text-left"
     >
       {pending ? <Spinner /> : <LogOut aria-hidden className="size-4 text-zinc-400" strokeWidth={1.5} />}
       {label}
@@ -52,7 +52,7 @@ export function UserMenu({ name, email, isAdmin }: { name: string; email: string
   }, [open]);
 
   const itemClass =
-    "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-50";
+    "flex items-center justify-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-50 md:justify-start";
 
   return (
     <div ref={rootRef} className="relative">
@@ -62,7 +62,7 @@ export function UserMenu({ name, email, isAdmin }: { name: string; email: string
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpen((value) => !value)}
-        className="flex h-10 items-center gap-2 rounded-full border border-white/60 bg-white/50 p-1 shadow-pill backdrop-blur-sm transition-colors hover:bg-white/80 sm:pr-2.5"
+        className="flex h-10 items-center gap-2 rounded-full border border-zinc-200/80 bg-zinc-100/80 p-1 shadow-pill transition-colors hover:bg-zinc-100 sm:pr-2.5"
       >
         <span className="flex size-8 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-white">
           {initials(name)}
@@ -73,7 +73,7 @@ export function UserMenu({ name, email, isAdmin }: { name: string; email: string
       {open ? (
         <div
           id={menuId}
-          className="absolute right-0 z-50 mt-2 w-64 rounded-2xl bg-white p-2 shadow-ring"
+          className="fixed inset-x-4 top-[4.25rem] z-50 rounded-2xl bg-white p-2 text-center shadow-ring md:absolute md:inset-x-auto md:top-auto md:right-0 md:mt-2 md:w-64 md:text-left"
         >
           <div className="border-b border-zinc-100 px-3 pt-2 pb-3">
             <p className="truncate text-sm font-semibold text-zinc-900">{name}</p>

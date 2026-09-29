@@ -34,18 +34,16 @@
     inset 0 -4px 8px rgb(7 86 170 / 0.7);
 }
 
-@utility glass-panel {
-  background: rgb(255 255 255 / 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
 @utility bg-primary-gradient {
   background: radial-gradient(circle at 10% 0%, var(--blue-light) 0%, var(--blue-primary) 55%, var(--blue-dark) 100%);
 }
 
 @utility bg-bevel {
   background-image: linear-gradient(to bottom, rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.1));
+}
+
+@utility safe-center {
+  justify-content: safe center;
 }
 
 @utility no-scrollbar {
@@ -87,7 +85,7 @@
     -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-zinc-500 text-zinc-800 antialiased selection:bg-zinc-900 selection:text-white;
+    @apply bg-white text-zinc-800 antialiased selection:bg-zinc-900 selection:text-white;
   }
   :focus-visible {
     outline: 2px solid rgb(7 118 243 / 0.6);
@@ -194,6 +192,60 @@
   height: 0;
   color: var(--color-zinc-400);
   pointer-events: none;
+}
+
+/* Toasts sit in the middle of the viewport. */
+[data-sonner-toaster].toaster-center {
+  top: 50% !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+@media (max-width: 600px) {
+  [data-sonner-toaster].toaster-center {
+    left: var(--mobile-offset-left) !important;
+    right: var(--mobile-offset-right) !important;
+    transform: translateY(-50%) !important;
+  }
+}
+
+/* Falling stroke from the Lumina grid (`beam-fall`), recolored to zinc. */
+.motion-beam {
+  opacity: 0;
+}
+
+@keyframes beam-fall {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.18;
+  }
+  50% {
+    opacity: 0.32;
+  }
+  95% {
+    opacity: 0.18;
+  }
+  100% {
+    transform: translateY(120vh);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .motion-beam-1 {
+    animation: beam-fall 6s linear infinite;
+  }
+  .motion-beam-2 {
+    animation: beam-fall 8s linear infinite;
+    animation-delay: 2s;
+  }
+  .motion-beam-3 {
+    animation: beam-fall 7s linear infinite;
+    animation-delay: 4s;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -47,7 +47,7 @@ export function Field({ label, htmlFor, hint, error, optionalLabel, children, cl
       </label>
       {children}
       {error ? (
-        <p id={`${htmlFor}-error`} className="text-xs font-medium text-red-600">
+        <p id={`${htmlFor}-error`} className="text-center text-xs font-medium text-red-600">
           {error}
         </p>
       ) : hint ? (
@@ -73,7 +73,7 @@ export function FormAlert({ tone = "error", children }: { tone?: "error" | "warn
     <div
       role="alert"
       className={cn(
-        "rounded-xl border px-4 py-3 text-sm leading-relaxed",
+        "rounded-xl border px-4 py-3 text-center text-sm leading-relaxed",
         tone === "error" ? "border-red-200 bg-red-50 text-red-800" : "border-amber-200 bg-amber-50 text-amber-900",
       )}
     >

@@ -43,6 +43,9 @@ yarn-error.log*
 # local design reference; not part of the app (also listed in .vercelignore)
 /System Design UXUI/
 
+# internal delivery notes, including production credentials. never commit.
+/interno/
+
 # lesson source files stay off GitHub; the live copy is in the database and private Blob
 /Creator_Academy_Class_01_Bangla_Final.md
 /Creator_Academy_Class_01_Bangla_Final.pdf

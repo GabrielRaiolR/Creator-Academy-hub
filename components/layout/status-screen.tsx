@@ -14,7 +14,7 @@ export function StatusScreen({
   actions?: ReactNode;
 }) {
   return (
-    <div className="mx-auto flex max-w-lg flex-col items-center py-12 text-center md:py-20">
+    <div className="mx-auto flex min-h-[50vh] w-full max-w-lg flex-col items-center justify-center px-2 py-12 text-center">
       {code ? <Eyebrow className="mb-6">{code}</Eyebrow> : null}
       <h1 className="text-3xl font-medium tracking-tighter text-balance text-zinc-900 md:text-4xl">{title}</h1>
       <p className="mt-4 text-base leading-relaxed text-zinc-500">{description}</p>

@@ -70,7 +70,7 @@ export default async function LessonPage({ params }: PageProps<"/[locale]/aulas/
       ) : null}
 
       {lesson.isFallback && translation ? (
-        <p role="note" className="mb-8 rounded-2xl bg-white/70 p-4 text-sm leading-relaxed text-zinc-600 shadow-ring">
+        <p role="note" className="mb-8 rounded-2xl bg-zinc-50 p-4 text-center text-sm leading-relaxed text-zinc-600 shadow-ring">
           {format(t.lessons.fallbackNotice, {
             language: t.languages[locale],
             fallback: t.languages[translation.locale as Locale] ?? translation.locale,
