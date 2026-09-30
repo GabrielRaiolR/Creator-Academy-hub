@@ -2,8 +2,8 @@ import { Eye, Pencil } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
+import { AnnotatedLesson } from "@/components/lessons/annotated-lesson";
 import { MaterialsList } from "@/components/lessons/materials-list";
-import { RichText } from "@/components/lessons/rich-text";
 import { VideoPlayer } from "@/components/lessons/video-player";
 import { Badge, Overline } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import { format } from "@/lib/i18n/messages";
 import { getLocaleContext } from "@/lib/i18n/server";
 import { isAdmin, requireUser } from "@/lib/permissions";
 import { getLessonForReader } from "@/lib/queries/lessons";
+import { listLessonNotes } from "@/lib/queries/notes";
 
 const loadLesson = cache(async (slug: string, locale: Locale) => {
   const user = await getCurrentUser();
@@ -38,11 +39,13 @@ export default async function LessonPage({ params }: PageProps<"/[locale]/aulas/
 
   const translation = lesson.translation;
   const title = translation?.title || t.lessons.untitled;
-  const contentLocale = translation?.locale ?? locale;
+  const contentLocale = (translation?.locale ?? locale) as Locale;
   const admin = isAdmin(user);
+  const notes = translation ? await listLessonNotes(lesson.id, contentLocale, user.id) : [];
 
   return (
     <article className="mx-auto max-w-3xl">
+      <div className="rounded-4xl border border-zinc-200/80 bg-white/95 p-6 shadow-ring backdrop-blur-md sm:p-8 md:p-10">
       <TextLink href={localePath(segment, "/aulas")} direction="back" className="mb-8">
         {t.lessons.backToLessons}
       </TextLink>
@@ -97,10 +100,18 @@ export default async function LessonPage({ params }: PageProps<"/[locale]/aulas/
         </div>
       ) : null}
 
-      {translation ? <RichText content={translation.content} lang={contentLocale} className="mb-14" /> : null}
+      {translation ? (
+        <AnnotatedLesson
+          content={translation.content}
+          lang={contentLocale}
+          lessonId={lesson.id}
+          locale={contentLocale}
+          notes={notes}
+        />
+      ) : null}
 
       {lesson.resources.length > 0 ? (
-        <section aria-labelledby="materials-title" className="mb-14">
+        <section aria-labelledby="materials-title" className="mt-14">
           <h2 id="materials-title" className="text-xl font-semibold tracking-tight text-zinc-900">
             {t.lessons.materialsTitle}
           </h2>
@@ -108,11 +119,12 @@ export default async function LessonPage({ params }: PageProps<"/[locale]/aulas/
           <MaterialsList materials={lesson.resources} locale={locale} t={t} />
         </section>
       ) : null}
+      </div>
 
       {lesson.previousSlug || lesson.nextSlug ? (
         <nav
           aria-label={t.lessons.title}
-          className="flex flex-col gap-4 border-t border-zinc-950/10 pt-8 sm:flex-row sm:justify-between"
+          className="mt-8 flex flex-col gap-4 border-t border-zinc-950/10 pt-8 sm:flex-row sm:justify-between"
         >
           {lesson.previousSlug ? (
             <TextLink href={localePath(segment, `/aulas/${lesson.previousSlug}`)} direction="back">

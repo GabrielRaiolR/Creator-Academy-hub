@@ -91,3 +91,22 @@ export const resourceInputSchema = z.object({
 });
 
 export const idSchema = z.uuid();
+
+export const lessonNoteDraftSchema = z.object({
+  lessonId: z.uuid(),
+  locale: localeSchema,
+  quote: z
+    .string()
+    .min(1, "validation.required")
+    .max(800, "validation.tooLong")
+    .refine((value) => value.trim().length > 0, "validation.required"),
+  prefix: z.string().max(32),
+  suffix: z.string().max(32),
+  position: z.number().int().min(0).max(1_000_000),
+  body: z.string().trim().min(1, "validation.required").max(2000, "validation.tooLong"),
+});
+
+export const lessonNoteUpdateSchema = z.object({
+  id: z.uuid(),
+  body: z.string().trim().min(1, "validation.required").max(2000, "validation.tooLong"),
+});
