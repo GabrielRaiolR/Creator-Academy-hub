@@ -20,26 +20,41 @@
   --color-blue-dark: var(--blue-dark);
   --color-blue-deep: var(--blue-deep);
 
-  --font-sans: var(--font-inter), var(--font-bengali), ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    var(--font-inter), var(--font-bengali), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --shadow-ring:
-    0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 1px -0.5px rgb(0 0 0 / 0.06), 0 3px 3px -1.5px rgb(0 0 0 / 0.06),
-    0 6px 6px -3px rgb(0 0 0 / 0.06), 0 12px 12px -6px rgb(0 0 0 / 0.06), 0 24px 24px -12px rgb(0 0 0 / 0.06);
+    0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 1px -0.5px rgb(0 0 0 / 0.06),
+    0 3px 3px -1.5px rgb(0 0 0 / 0.06), 0 6px 6px -3px rgb(0 0 0 / 0.06),
+    0 12px 12px -6px rgb(0 0 0 / 0.06), 0 24px 24px -12px rgb(0 0 0 / 0.06);
   --shadow-pill:
-    0 2px 3px -1px rgb(0 0 0 / 0.1), 0 1px 0 0 rgb(25 28 33 / 0.02), 0 0 0 1px rgb(25 28 33 / 0.08);
-  --shadow-bevel: 0 18px 35px rgb(31 41 55 / 0.25), 0 0 0 1px rgb(209 213 219 / 0.3);
+    0 2px 3px -1px rgb(0 0 0 / 0.1), 0 1px 0 0 rgb(25 28 33 / 0.02),
+    0 0 0 1px rgb(25 28 33 / 0.08);
+  --shadow-bevel:
+    0 18px 35px rgb(31 41 55 / 0.25), 0 0 0 1px rgb(209 213 219 / 0.3);
   --shadow-primary:
-    0 15px 25px -10px rgb(7 86 170 / 0.6), inset 0 4px 8px rgb(147 197 253 / 0.55),
+    0 15px 25px -10px rgb(7 86 170 / 0.6),
+    inset 0 4px 8px rgb(147 197 253 / 0.55),
     inset 0 -4px 8px rgb(7 86 170 / 0.7);
 }
 
 @utility bg-primary-gradient {
-  background: radial-gradient(circle at 10% 0%, var(--blue-light) 0%, var(--blue-primary) 55%, var(--blue-dark) 100%);
+  background: radial-gradient(
+    circle at 10% 0%,
+    var(--blue-light) 0%,
+    var(--blue-primary) 55%,
+    var(--blue-dark) 100%
+  );
 }
 
 @utility bg-bevel {
-  background-image: linear-gradient(to bottom, rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.1));
+  background-image: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0.1),
+    rgb(0 0 0 / 0.2),
+    rgb(0 0 0 / 0.1)
+  );
 }
 
 @utility safe-center {
@@ -64,7 +79,10 @@
     inset: 0;
     padding: 1px;
     border-radius: inherit;
-    background: var(--hairline, linear-gradient(180deg, rgb(0 0 0 / 0.05), rgb(0 0 0 / 0)));
+    background: var(
+      --hairline,
+      linear-gradient(180deg, rgb(0 0 0 / 0.05), rgb(0 0 0 / 0))
+    );
     -webkit-mask:
       linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
@@ -73,10 +91,20 @@
     pointer-events: none;
   }
   .hairline-strong {
-    --hairline: linear-gradient(180deg, rgb(0 0 0 / 0.1), rgb(0 0 0 / 0), rgb(0 0 0 / 0.1));
+    --hairline: linear-gradient(
+      180deg,
+      rgb(0 0 0 / 0.1),
+      rgb(0 0 0 / 0),
+      rgb(0 0 0 / 0.1)
+    );
   }
   .hairline-bevel {
-    --hairline: linear-gradient(180deg, rgb(255 255 255 / 0.8), rgb(0 0 0 / 0.4), rgb(255 255 255 / 0.8));
+    --hairline: linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.8),
+      rgb(0 0 0 / 0.4),
+      rgb(255 255 255 / 0.8)
+    );
   }
 }
 
@@ -142,7 +170,9 @@
   text-decoration: underline;
   text-decoration-color: var(--color-zinc-300);
   text-underline-offset: 4px;
-  transition: color 150ms, text-decoration-color 150ms;
+  transition:
+    color 150ms,
+    text-decoration-color 150ms;
 }
 .rich-text a:hover {
   color: var(--blue-dark);
@@ -171,6 +201,83 @@
   border-left: 2px solid var(--color-zinc-200);
   padding-left: 1.5em;
   color: var(--color-zinc-500);
+}
+/* Highlighter. The text color has to be set explicitly: with only `inherit`,
+   the selection paints the glyphs white and they disappear on the blue. */
+.rich-text ::selection {
+  background-color: rgba(71, 195, 253, 0.45);
+  color: rgb(63 63 70);
+  -webkit-text-fill-color: rgb(63 63 70);
+}
+.rich-text *::selection {
+  background-color: rgba(71, 195, 253, 0.45);
+  color: rgb(63 63 70);
+  -webkit-text-fill-color: rgb(63 63 70);
+}
+.rich-text ::-moz-selection {
+  background-color: rgba(71, 195, 253, 0.45);
+  color: rgb(63 63 70);
+}
+.rich-text *::-moz-selection {
+  background-color: rgba(71, 195, 253, 0.45);
+  color: rgb(63 63 70);
+}
+.rich-text .note-mark {
+  color: rgb(63 63 70);
+  -webkit-text-fill-color: rgb(63 63 70);
+  cursor: pointer;
+  background-color: rgba(71, 195, 253, 0.45);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+/* Sits on the end of the highlight without taking a slot in the line. */
+.rich-text .note-pin {
+  position: absolute;
+  z-index: 2;
+  top: -0.15em;
+  left: 100%;
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  translate: -35% -85%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: white;
+  color: var(--color-zinc-500);
+  box-shadow: var(--shadow-ring);
+  user-select: none;
+  cursor: pointer;
+}
+
+@keyframes note-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes note-pop-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .note-popover[data-state="open"] {
+    animation: note-pop-in 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .note-popover[data-state="closed"] {
+    animation: note-pop-out 130ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    pointer-events: none;
+  }
 }
 :lang(bn) .rich-text {
   line-height: 1.95;

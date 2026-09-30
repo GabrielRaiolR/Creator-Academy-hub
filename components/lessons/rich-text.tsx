@@ -57,27 +57,29 @@ function renderNode(node: RichTextNode, key: string, context: RenderContext): Re
         <Fragment key={key}>
           {slices.map((slice) => {
             const marked = slice.noteIds.length ? (
-              <mark data-open-note={slice.noteIds[0]} className="cursor-pointer rounded-sm bg-zinc-200/90 text-inherit">
+              <mark data-open-note={slice.noteIds[0]} className="note-mark">
                 <span data-offset={slice.start}>{slice.text}</span>
               </mark>
             ) : (
               <span data-offset={start < 0 ? undefined : slice.start}>{slice.text}</span>
             );
+            const body = renderMarks(marked, node.marks, `${key}-${slice.start}`);
+            if (slice.endNoteIds.length === 0) return <Fragment key={slice.start}>{body}</Fragment>;
             return (
-              <Fragment key={slice.start}>
-                {renderMarks(marked, node.marks, `${key}-${slice.start}`)}
+              <span key={slice.start} className="relative">
+                {body}
                 {slice.endNoteIds.map((id) => (
                   <button
                     key={`${key}-note-${id}`}
                     type="button"
                     data-open-note={id}
                     aria-label={context.noteLabel}
-                    className="relative -top-1 ml-0.5 inline-flex size-5 items-center justify-center rounded-full bg-white align-super text-zinc-500 shadow-ring select-none"
+                    className="note-pin"
                   >
-                    <MessageSquare aria-hidden className="size-3" strokeWidth={1.5} />
+                    <MessageSquare aria-hidden className="size-4" strokeWidth={1.75} />
                   </button>
                 ))}
-              </Fragment>
+              </span>
             );
           })}
         </Fragment>
