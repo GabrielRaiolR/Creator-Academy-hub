@@ -15,6 +15,13 @@
       "when": 1790568945914,
       "tag": "0001_lesson_grant",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790802554012,
+      "tag": "0002_lesson_note",
+      "breakpoints": true
     }
   ]
 }

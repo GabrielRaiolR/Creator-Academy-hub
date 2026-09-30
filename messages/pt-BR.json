@@ -89,7 +89,22 @@
     "untitled": "Aula sem título",
     "videoTitle": "Vídeo da aula: {title}",
     "notFoundTitle": "Aula não encontrada",
-    "notFoundText": "Esta aula não existe ou ainda não foi publicada."
+    "notFoundText": "Esta aula não existe ou ainda não foi publicada.",
+    "notes": {
+      "annotate": "Anotar",
+      "placeholder": "Escreva o que você quer lembrar deste trecho.",
+      "save": "Salvar",
+      "saved": "Anotação salva.",
+      "updated": "Anotação atualizada.",
+      "delete": "Excluir",
+      "deleted": "Anotação removida.",
+      "deleteTitle": "Excluir anotação?",
+      "deleteText": "O trecho deixa de ficar marcado e a nota é apagada.",
+      "open": "Abrir anotação",
+      "tooLong": "Selecione um trecho mais curto.",
+      "orphansTitle": "Anotações fora do texto",
+      "orphansText": "O texto da aula mudou e estes trechos não foram encontrados."
+    }
   },
   "profile": {
     "eyebrow": "Sua conta",

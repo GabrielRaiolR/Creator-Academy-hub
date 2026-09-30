@@ -95,10 +95,41 @@ export const lessonGrant = pgTable(
   ],
 );
 
+/**
+ * A student's private note on one passage of a lesson translation.
+ * The passage is a quote with the text around it, not a mark inside the shared document,
+ * so an edit to the lesson cannot leak or erase someone else's copy.
+ */
+export const lessonNote = pgTable(
+  "lesson_note",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    lessonId: uuid("lesson_id")
+      .notNull()
+      .references(() => lesson.id, { onDelete: "cascade" }),
+    locale: text("locale").$type<Locale>().notNull(),
+    quote: text("quote").notNull(),
+    prefix: text("prefix").default("").notNull(),
+    suffix: text("suffix").default("").notNull(),
+    position: integer("position").default(0).notNull(),
+    body: text("body").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [index("lesson_note_user_lesson_locale_idx").on(table.userId, table.lessonId, table.locale)],
+);
+
 export const lessonRelations = relations(lesson, ({ many }) => ({
   translations: many(lessonTranslation),
   resources: many(lessonResource),
   grants: many(lessonGrant),
+  notes: many(lessonNote),
 }));
 
 export const lessonTranslationRelations = relations(lessonTranslation, ({ one }) => ({
@@ -112,4 +143,9 @@ export const lessonResourceRelations = relations(lessonResource, ({ one }) => ({
 export const lessonGrantRelations = relations(lessonGrant, ({ one }) => ({
   lesson: one(lesson, { fields: [lessonGrant.lessonId], references: [lesson.id] }),
   user: one(user, { fields: [lessonGrant.userId], references: [user.id] }),
+}));
+
+export const lessonNoteRelations = relations(lessonNote, ({ one }) => ({
+  lesson: one(lesson, { fields: [lessonNote.lessonId], references: [lesson.id] }),
+  user: one(user, { fields: [lessonNote.userId], references: [user.id] }),
 }));
