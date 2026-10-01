@@ -45,7 +45,7 @@ export default async function LessonPage({ params }: PageProps<"/[locale]/aulas/
 
   return (
     <article className="mx-auto max-w-3xl">
-      <div className="rounded-4xl border border-zinc-200/80 bg-white/95 p-6 shadow-ring backdrop-blur-md sm:p-8 md:p-10">
+      <div className="rounded-4xl border border-zinc-200/80 bg-white p-6 shadow-ring sm:p-8 md:p-10">
       <TextLink href={localePath(segment, "/aulas")} direction="back" className="mb-8">
         {t.lessons.backToLessons}
       </TextLink>

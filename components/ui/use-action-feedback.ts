@@ -20,8 +20,11 @@ export function useActionFeedback() {
       if (successKey) toast.success(translate(t, successKey));
       return true;
     }
-    setFieldErrors(result.fieldErrors ?? {});
-    toast.error(translate(t, result.error));
+    const fieldErrors = result.fieldErrors ?? {};
+    setFieldErrors(fieldErrors);
+    const messages = Object.values(fieldErrors);
+    const message = messages.length === 1 ? messages[0] : result.error;
+    toast.error(translate(t, message ?? result.error));
     return false;
   }
 

@@ -301,21 +301,6 @@
   pointer-events: none;
 }
 
-/* Toasts sit in the middle of the viewport. */
-[data-sonner-toaster].toaster-center {
-  top: 50% !important;
-  bottom: auto !important;
-  transform: translate(-50%, -50%) !important;
-}
-
-@media (max-width: 600px) {
-  [data-sonner-toaster].toaster-center {
-    left: var(--mobile-offset-left) !important;
-    right: var(--mobile-offset-right) !important;
-    transform: translateY(-50%) !important;
-  }
-}
-
 /* Falling stroke from the Lumina grid (`beam-fall`), recolored to zinc. */
 .motion-beam {
   opacity: 0;

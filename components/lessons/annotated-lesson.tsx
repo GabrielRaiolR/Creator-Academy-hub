@@ -122,7 +122,7 @@ export function AnnotatedLesson({
   notes: StoredNote[];
 }) {
   const { t } = useI18n();
-  const { handle, errorFor } = useActionFeedback();
+  const { handle } = useActionFeedback();
   const rootRef = useRef<HTMLDivElement>(null);
   const [notes, setNotes] = useState(initialNotes);
   const [toolbar, setToolbar] = useState<{ quote: string; prefix: string; suffix: string; position: number; rect: AnchorRect } | null>(null);
@@ -334,7 +334,6 @@ export function AnnotatedLesson({
               className="mt-3"
               aria-label={t.lessons.notes.placeholder}
             />
-            {errorFor("body") ? <p className="mt-1.5 text-center text-xs font-medium text-red-600">{errorFor("body")}</p> : null}
             <div className="mt-3 flex items-center justify-between gap-2">
               {composer.mode === "edit" ? (
                 <ConfirmDialog

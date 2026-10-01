@@ -6,7 +6,7 @@ import { db } from "@/db";
 import { lesson, lessonNote } from "@/db/schema";
 import { flattenRichText, locateQuote, NOTE_CONTEXT, type StoredNote } from "@/lib/content/note-anchor";
 import { sanitizeRichText } from "@/lib/content/rich-text";
-import type { Locale } from "@/lib/i18n/config";
+import { segments, type Locale } from "@/lib/i18n/config";
 import { assertUser } from "@/lib/permissions";
 import { canViewLesson } from "@/lib/permissions/rules";
 import { studentHasGrant } from "@/lib/queries/lessons";
@@ -24,6 +24,13 @@ async function readableLesson(lessonId: string) {
   const granted = current.role === "ADMIN" || (await studentHasGrant(current.id, row.id));
   if (!canViewLesson(current, row, granted)) return null;
   return { current, row };
+}
+
+/** Only the lesson pages change when a note is saved. A layout-wide refresh reloads the whole app. */
+async function revalidateLesson(lessonId: string) {
+  const [row] = await db.select({ slug: lesson.slug }).from(lesson).where(eq(lesson.id, lessonId)).limit(1);
+  if (!row) return;
+  for (const segment of segments) revalidatePath(`/${segment}/aulas/${row.slug}`);
 }
 
 function contextAround(text: string, start: number, end: number) {
@@ -77,7 +84,7 @@ export async function createLessonNoteAction(input: {
       });
     if (!created) return fail("errors.generic");
 
-    revalidatePath("/", "layout");
+    await revalidateLesson(parsed.data.lessonId);
     return ok(created);
   });
 }
@@ -99,7 +106,7 @@ export async function updateLessonNoteAction(input: { id: string; body: string }
     if (!readable) return fail("errors.forbidden");
 
     await db.update(lessonNote).set({ body: parsed.data.body }).where(eq(lessonNote.id, note.id));
-    revalidatePath("/", "layout");
+    await revalidateLesson(note.lessonId);
     return ok();
   });
 }
@@ -121,7 +128,7 @@ export async function deleteLessonNoteAction(input: { id: string }): Promise<Act
     if (!readable) return fail("errors.forbidden");
 
     await db.delete(lessonNote).where(eq(lessonNote.id, note.id));
-    revalidatePath("/", "layout");
+    await revalidateLesson(note.lessonId);
     return ok();
   });
 }

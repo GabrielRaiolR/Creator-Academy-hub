@@ -2,13 +2,13 @@
 
 import { Toaster as Sonner } from "sonner";
 
-/** Toasts rendered as ring cards to match the design system. */
+/** Toasts sit at the bottom and leave on their own. */
 export function Toaster() {
   return (
     <Sonner
-      position="top-center"
-      className="toaster-center"
-      closeButton
+      position="bottom-center"
+      offset={24}
+      duration={2000}
       toastOptions={{
         classNames: {
           toast:
@@ -16,7 +16,6 @@ export function Toaster() {
           description: "!text-zinc-500",
           success: "[&_[data-icon]]:!text-emerald-500",
           error: "[&_[data-icon]]:!text-red-500",
-          closeButton: "!border-zinc-100 !bg-white !text-zinc-500",
         },
       }}
     />
