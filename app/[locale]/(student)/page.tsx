@@ -1,6 +1,5 @@
-import { BookOpen, Shield, UserRound } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
 import { LessonFeatures, LessonGrid } from "@/components/lessons/lesson-grid";
 import { Overline } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -9,24 +8,12 @@ import { TextLink } from "@/components/ui/text-link";
 import { localePath } from "@/lib/i18n/config";
 import { format } from "@/lib/i18n/messages";
 import { getLocaleContext } from "@/lib/i18n/server";
-import { isAdmin, requireUser } from "@/lib/permissions";
+import { requireUser } from "@/lib/permissions";
 import { listPublishedLessons } from "@/lib/queries/lessons";
 import { formatDate } from "@/lib/utils";
 
 const PREVIEW_COUNT = 6;
 const RECENT_COUNT = 3;
-
-function Shortcut({ href, icon, label }: { href: string; icon: ReactNode; label: string }) {
-  return (
-    <Link
-      href={href}
-      className="flex items-center gap-3 rounded-2xl bg-white p-4 text-sm font-medium tracking-tight text-zinc-900 shadow-ring transition-colors hover:bg-zinc-50"
-    >
-      <span className="flex size-9 items-center justify-center rounded-xl bg-zinc-100 text-zinc-500">{icon}</span>
-      {label}
-    </Link>
-  );
-}
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { segment, locale, t } = await getLocaleContext(params);
@@ -47,26 +34,6 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         title={format(t.home.greeting, { name: firstName })}
         description={t.home.subtitle}
       />
-
-      <nav aria-label={t.nav.primary} className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <Shortcut
-          href={localePath(segment, "/aulas")}
-          icon={<BookOpen aria-hidden className="size-4" strokeWidth={1.5} />}
-          label={t.nav.lessons}
-        />
-        <Shortcut
-          href={localePath(segment, "/perfil")}
-          icon={<UserRound aria-hidden className="size-4" strokeWidth={1.5} />}
-          label={t.nav.profile}
-        />
-        {isAdmin(user) ? (
-          <Shortcut
-            href={localePath(segment, "/admin")}
-            icon={<Shield aria-hidden className="size-4" strokeWidth={1.5} />}
-            label={t.nav.admin}
-          />
-        ) : null}
-      </nav>
 
       {lessons.length === 0 ? (
         <EmptyState
